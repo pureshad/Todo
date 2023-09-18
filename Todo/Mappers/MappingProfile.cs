@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Todo.Infrastructure.Models;
+using Todo.Application.Models;
 
 public class MappingProfile : Profile
 {

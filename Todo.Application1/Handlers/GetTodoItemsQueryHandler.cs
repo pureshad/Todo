@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo.Application.Database;
-using Todo.Infrastructure.Models;
+using Todo.Application.Models;
 
 public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsQuery, List<TodoItemDto>>
 {

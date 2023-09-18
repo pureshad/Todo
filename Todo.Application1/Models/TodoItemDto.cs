@@ -1,4 +1,4 @@
-﻿namespace Todo.Infrastructure.Models
+﻿namespace Todo.Application.Models
 {
     public class TodoItemDto : CreateTodoItemCommandBase
     {

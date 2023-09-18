@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Todo.Infrastructure.Models;
+using Todo.Application.Models;
 
 public class GetTodoItemsQuery : IRequest<List<TodoItemDto>>
 {

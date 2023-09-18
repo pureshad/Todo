@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Todo.Infrastructure.Models;
+using Todo.Application.Models;
 
 [ApiController]
 [Route("api/todo")]

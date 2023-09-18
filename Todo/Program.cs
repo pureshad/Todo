@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Todo.Application.Database;
-using Todo.Infrastructure.Models;
+using Todo.Application.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

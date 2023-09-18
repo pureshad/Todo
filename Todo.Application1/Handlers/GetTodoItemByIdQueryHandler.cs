@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Todo.Application.Database;
-using Todo.Infrastructure.Models;
+using Todo.Application.Models;
 
 public class GetTodoItemByIdQueryHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
 {
