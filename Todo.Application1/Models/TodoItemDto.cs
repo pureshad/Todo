@@ -2,6 +2,6 @@
 {
     public class TodoItemDto : CreateTodoItemCommandBase
     {
-        public bool IsCompleted { get; set; }
+        public bool? IsCompleted { get; set; }
     }
 }

@@ -1,12 +1,8 @@
-﻿using MediatR;
-using Todo.Application.Database;
-using Todo.Application.Models;
-
-public class CreateTodoItemHandler : IRequestHandler<CreateTodoItemCommand, int>
+﻿public class CreateTodoItemHandler : IRequestHandler<CreateTodoItemCommand, int>
 {
-    private readonly TodoContext _context;
+    private readonly ITodoContext _context;
 
-    public CreateTodoItemHandler(TodoContext context)
+    public CreateTodoItemHandler(ITodoContext context)
     {
         _context = context;
     }

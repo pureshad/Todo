@@ -1,8 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Todo.Application.Models;
-
-[ApiController]
+﻿[ApiController]
 [Route("api/todo")]
 public class TodoController : ControllerBase
 {
@@ -28,12 +24,27 @@ public class TodoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTodoItem(int id, UpdateTodoItemCommand command)
+    public async Task<IActionResult> UpdateTodoItem(int id, UpdateTodoItemCommandRequestDto command)
     {
         try
         {
-            command.Id = id;
-            await _mediator.Send(command);
+            UpdateTodoItemCommand request = new () { Id = id , IsCompleted = command.IsCompleted, Title = command.Title };
+            await _mediator.Send(request);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}");
+        }
+    }
+
+    [HttpPut("complete/{id}")]
+    public async Task<IActionResult> UpdateTodoItemCompleted(int id, UpdateCompletedTodoItemCommandDto command)
+    {
+        try
+        {
+            UpdateCompletedTodoItemCommand request = new() { Id = id, IsCompleted = command.IsCompleted };
+            await _mediator.Send(request);
             return NoContent();
         }
         catch (Exception ex)

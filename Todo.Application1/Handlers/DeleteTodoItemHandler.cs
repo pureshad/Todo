@@ -1,11 +1,8 @@
-﻿using MediatR;
-using Todo.Application.Database;
-
-public class DeleteTodoItemHandler : IRequestHandler<DeleteTodoItemCommand>
+﻿public class DeleteTodoItemHandler : IRequestHandler<DeleteTodoItemCommand>
 {
-    private readonly TodoContext _context;
+    private readonly ITodoContext _context;
 
-    public DeleteTodoItemHandler(TodoContext context)
+    public DeleteTodoItemHandler(ITodoContext context)
     {
         _context = context;
     }
@@ -14,7 +11,7 @@ public class DeleteTodoItemHandler : IRequestHandler<DeleteTodoItemCommand>
     {
         try
         {
-            var todoItem = await _context.TodoItems.FindAsync(new object?[] { request.Id }, 
+            var todoItem = await _context.TodoItems.FindAsync(new object?[] { request.Id },
                 cancellationToken: cancellationToken) ?? throw new Exception("Todo item not found.");
             _context.TodoItems.Remove(todoItem);
             await _context.SaveChangesAsync(cancellationToken);

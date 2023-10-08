@@ -20,5 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Todo.Application1\Todo.Application.csproj" />
   </ItemGroup>
-
+	<Target Name="StopIISExpress" BeforeTargets="Build">
+		<!-- Stop IIS Express by its process name -->
+		<Exec Command="taskkill /F /IM iisexpress.exe" IgnoreExitCode="true" />
+	</Target>
 </Project>

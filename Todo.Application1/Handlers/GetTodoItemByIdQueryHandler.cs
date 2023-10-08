@@ -1,12 +1,8 @@
-﻿using MediatR;
-using Todo.Application.Database;
-using Todo.Application.Models;
-
-public class GetTodoItemByIdQueryHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
+﻿public class GetTodoItemByIdQueryHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
 {
-    private readonly TodoContext _context;
+    private readonly ITodoContext _context;
 
-    public GetTodoItemByIdQueryHandler(TodoContext context)
+    public GetTodoItemByIdQueryHandler(ITodoContext context)
     {
         _context = context;
     }

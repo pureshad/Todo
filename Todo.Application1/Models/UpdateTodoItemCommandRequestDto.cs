@@ -1,8 +1,7 @@
 ﻿namespace Todo.Application.Models
 {
-    public class TodoItem : CreateTodoItemCommandBase
+    public class UpdateTodoItemCommandRequestDto : CreateTodoItemCommandBase, IRequest
     {
-        public int Id { get; set; }
         public bool? IsCompleted { get; set; }
     }
 }

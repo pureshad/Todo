@@ -1,9 +1,3 @@
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using Todo.Application.Database;
-using Todo.Application.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,7 +9,9 @@ builder.Services.AddSwaggerGen(w =>
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddTransient<IRequestHandler<CreateTodoItemCommand, int>, CreateTodoItemHandler>();
 builder.Services.AddTransient<IRequestHandler<DeleteTodoItemCommand>, DeleteTodoItemHandler>();
+builder.Services.AddTransient<IRequestHandler<UpdateCompletedTodoItemCommand>, UpdateTodoItemCompleteHandler>();
 builder.Services.AddTransient<IRequestHandler<UpdateTodoItemCommand>, UpdateTodoItemHandler>();
+
 builder.Services.AddTransient<IRequestHandler<GetTodoItemsQuery, List<TodoItemDto>>, GetTodoItemsQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>, GetTodoItemByIdQueryHandler>();
 
@@ -28,7 +24,7 @@ var conf = new ConfigurationBuilder()
     .AddUserSecrets(Assembly.GetExecutingAssembly())
     .Build();
 
-builder.Services.AddDbContext<TodoContext>(options =>
+builder.Services.AddDbContext<ITodoContext, TodoContext>(options =>
 {
     options.UseSqlServer(conf.GetConnectionString("DefaultConnection"));
 });

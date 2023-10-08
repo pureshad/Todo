@@ -1,11 +1,8 @@
-﻿using MediatR;
-using Todo.Application.Database;
-
-public class UpdateTodoItemHandler : IRequestHandler<UpdateTodoItemCommand>
+﻿public class UpdateTodoItemHandler : IRequestHandler<UpdateTodoItemCommand>
 {
-    private readonly TodoContext _context;
+    private readonly ITodoContext _context;
 
-    public UpdateTodoItemHandler(TodoContext context)
+    public UpdateTodoItemHandler(ITodoContext context)
     {
         _context = context;
     }

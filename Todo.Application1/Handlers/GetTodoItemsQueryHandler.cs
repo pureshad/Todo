@@ -1,15 +1,9 @@
-﻿using AutoMapper;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Todo.Application.Database;
-using Todo.Application.Models;
-
-public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsQuery, List<TodoItemDto>>
+﻿public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsQuery, List<TodoItemDto>>
 {
-    private readonly TodoContext _context;
+    private readonly ITodoContext _context;
     private readonly IMapper _mapper;
 
-    public GetTodoItemsQueryHandler(TodoContext context, IMapper mapper)
+    public GetTodoItemsQueryHandler(ITodoContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Todo.Application.Models;
+﻿using Todo.Application.Models;
 
 public class GetTodoItemByIdQuery : IRequest<TodoItemDto>
 {
