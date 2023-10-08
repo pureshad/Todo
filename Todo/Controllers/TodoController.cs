@@ -1,4 +1,6 @@
-﻿[ApiController]
+﻿using Serilog;
+
+[ApiController]
 [Route("api/todo")]
 public class TodoController : ControllerBase
 {
@@ -19,7 +21,9 @@ public class TodoController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"An error occurred while creating the todo item. Message {ex.InnerException?.Message ?? ex.Message}");
+            string message = $"An error occurred while creating the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
+            Log.Error(message);
+            return StatusCode(500, message);
         }
     }
 
@@ -28,13 +32,15 @@ public class TodoController : ControllerBase
     {
         try
         {
-            UpdateTodoItemCommand request = new () { Id = id , IsCompleted = command.IsCompleted, Title = command.Title };
+            UpdateTodoItemCommand request = new() { Id = id, IsCompleted = command.IsCompleted, Title = command.Title };
             await _mediator.Send(request);
             return NoContent();
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}");
+            string message = $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
+            Log.Error(message);
+            return StatusCode(500, message);
         }
     }
 
@@ -49,7 +55,9 @@ public class TodoController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}");
+            string message = $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
+            Log.Error(message);
+            return StatusCode(500, message);
         }
     }
 
@@ -64,7 +72,9 @@ public class TodoController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"An error occurred while deleting the todo item. Message {ex.InnerException?.Message ?? ex.Message}");
+            string message = $"An error occurred while deleting the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
+            Log.Error(message);
+            return StatusCode(500, message);
         }
     }
 
@@ -73,13 +83,16 @@ public class TodoController : ControllerBase
     {
         try
         {
+            Log.Information("DONE");
             var query = new GetTodoItemsQuery();
             var items = await _mediator.Send(query);
             return Ok(items);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"An error occurred while fetching todo items. Message {ex.InnerException?.Message ?? ex.Message}");
+            string message = $"An error occurred while fetching todo items. Message {ex.InnerException?.Message ?? ex.Message}";
+            Log.Error(message);
+            return StatusCode(500, message);
         }
     }
 
@@ -93,6 +106,7 @@ public class TodoController : ControllerBase
 
             if (item == null)
             {
+                Log.Warning($"{MethodBase.GetCurrentMethod()?.Name} Unable to find item by id: {id}");
                 return NotFound();
             }
 
@@ -100,7 +114,9 @@ public class TodoController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"An error occurred while fetching the todo item. Message {ex.InnerException?.Message ?? ex.Message}");
+            string message = $"An error occurred while fetching the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
+            Log.Error(message);
+            return StatusCode(500, message);
         }
     }
 }

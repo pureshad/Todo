@@ -29,7 +29,24 @@ builder.Services.AddDbContext<ITodoContext, TodoContext>(options =>
     options.UseSqlServer(conf.GetConnectionString("DefaultConnection"));
 });
 
+var logConfiguration = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console();
+
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    logConfiguration.WriteTo.File("logs/todo", rollingInterval: RollingInterval.Day);
+}
+else
+{
+    logConfiguration.WriteTo.File("logs/todo", rollingInterval: RollingInterval.Day);
+}
+
+logConfiguration.CreateLogger();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
