@@ -6,5 +6,5 @@ global using Todo.Application.Database;
 global using Todo.Application.Handlers;
 global using Todo.Application.Models;
 global using Microsoft.AspNetCore.Mvc;
-global using Serilog.Events;
 global using Serilog;
+global using Microsoft.Extensions.Caching.Memory;

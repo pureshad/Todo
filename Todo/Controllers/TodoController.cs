@@ -1,14 +1,17 @@
-﻿using Serilog;
-
-[ApiController]
+﻿[ApiController]
 [Route("api/todo")]
 public class TodoController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMemoryCache _memoryCache;
 
-    public TodoController(IMediator mediator)
+    private readonly ILogger<TodoController> _logger;
+
+    public TodoController(IMediator mediator, ILogger<TodoController> logger, IMemoryCache memoryCache)
     {
         _mediator = mediator;
+        _logger = logger;
+        _memoryCache = memoryCache;
     }
 
     [HttpPost]
@@ -22,7 +25,7 @@ public class TodoController : ControllerBase
         catch (Exception ex)
         {
             string message = $"An error occurred while creating the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
-            Log.Error(message);
+            _logger.LogError(message);
             return StatusCode(500, message);
         }
     }
@@ -39,7 +42,7 @@ public class TodoController : ControllerBase
         catch (Exception ex)
         {
             string message = $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
-            Log.Error(message);
+            _logger.LogError(message);
             return StatusCode(500, message);
         }
     }
@@ -56,7 +59,7 @@ public class TodoController : ControllerBase
         catch (Exception ex)
         {
             string message = $"An error occurred while updating the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
-            Log.Error(message);
+            _logger.LogError(message);
             return StatusCode(500, message);
         }
     }
@@ -73,7 +76,7 @@ public class TodoController : ControllerBase
         catch (Exception ex)
         {
             string message = $"An error occurred while deleting the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
-            Log.Error(message);
+            _logger.LogError(message);
             return StatusCode(500, message);
         }
     }
@@ -83,15 +86,17 @@ public class TodoController : ControllerBase
     {
         try
         {
-            Log.Information("DONE");
             var query = new GetTodoItemsQuery();
             var items = await _mediator.Send(query);
-            return Ok(items);
+            if (items?.Any() == true)
+                return Ok(items);
+            else
+                return NotFound();
         }
         catch (Exception ex)
         {
             string message = $"An error occurred while fetching todo items. Message {ex.InnerException?.Message ?? ex.Message}";
-            Log.Error(message);
+            _logger.LogError(message);
             return StatusCode(500, message);
         }
     }
@@ -106,7 +111,7 @@ public class TodoController : ControllerBase
 
             if (item == null)
             {
-                Log.Warning($"{MethodBase.GetCurrentMethod()?.Name} Unable to find item by id: {id}");
+                _logger.LogWarning($"{nameof(GetTodoItemById)} Unable to find item by id: {id}");
                 return NotFound();
             }
 
@@ -115,7 +120,7 @@ public class TodoController : ControllerBase
         catch (Exception ex)
         {
             string message = $"An error occurred while fetching the todo item. Message {ex.InnerException?.Message ?? ex.Message}";
-            Log.Error(message);
+            _logger.LogError(message);
             return StatusCode(500, message);
         }
     }

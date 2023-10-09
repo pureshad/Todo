@@ -15,16 +15,28 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="Serilog" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.1" />
+    <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Todo.Application1\Todo.Application.csproj" />
   </ItemGroup>
-	<Target Name="StopIISExpress" BeforeTargets="Build">
-		<!-- Stop IIS Express by its process name -->
-		<Exec Command="taskkill /F /IM iisexpress.exe" IgnoreExitCode="true" />
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="taskkill /IM w3wp.exe /F /T 1&gt;nul 2&gt;nul 2&gt;1 || exit /B 0" />
 	</Target>
+	<ItemGroup>
+		<Content Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</Content>
+		<Content Update="appsettings.Development.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 </Project>

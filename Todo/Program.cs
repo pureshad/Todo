@@ -1,11 +1,20 @@
 var builder = WebApplication.CreateBuilder(args);
-
+var configuration = builder.Configuration;
+var logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+builder.Services.AddSingleton<Serilog.ILogger>(logger);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen(w =>
 {
     w.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Todo", Version = "v1" });
 });
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddTransient<IRequestHandler<CreateTodoItemCommand, int>, CreateTodoItemHandler>();
 builder.Services.AddTransient<IRequestHandler<DeleteTodoItemCommand>, DeleteTodoItemHandler>();
@@ -17,6 +26,7 @@ builder.Services.AddTransient<IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<TodoContext>();
+builder.Services.AddMemoryCache();
 
 var conf = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -29,24 +39,7 @@ builder.Services.AddDbContext<ITodoContext, TodoContext>(options =>
     options.UseSqlServer(conf.GetConnectionString("DefaultConnection"));
 });
 
-var logConfiguration = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .Enrich.FromLogContext()
-    .WriteTo.Console();
-
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    logConfiguration.WriteTo.File("logs/todo", rollingInterval: RollingInterval.Day);
-}
-else
-{
-    logConfiguration.WriteTo.File("logs/todo", rollingInterval: RollingInterval.Day);
-}
-
-logConfiguration.CreateLogger();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -69,5 +62,15 @@ app.UseSwaggerUI(c =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger/index.html");
+    }
+    else
+    {
+        await next();
+    }
+});
 app.Run();
